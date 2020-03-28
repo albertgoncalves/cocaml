@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for x in bin build; do
+    if [ ! -d "$WD/$x" ]; then
+        mkdir "$WD/$x"
+    fi
+done
+
+export FLAGS=(
+    -ccopt "-std=c99" \
+    -ccopt "-ferror-limit=1" \
+    -ccopt -Wall \
+    -ccopt -Wextra \
+    -ccopt -Wconversion \
+    -ccopt -Wsign-conversion \
+    -ccopt -Wunused \
+    -ccopt -Wunused-function \
+    -ccopt -Wunused-label \
+    -ccopt -Wunused-macros \
+    -ccopt -Wunused-parameter \
+    -ccopt -Wunused-value \
+    -ccopt -Wunused-variable \
+    -ccopt -Wcast-align \
+    -ccopt -Wcast-qual \
+    -ccopt -Wmissing-declarations \
+    -ccopt -Wredundant-decls \
+    -ccopt -Wmissing-prototypes \
+    -ccopt -Wnested-externs \
+    -ccopt -Wpointer-arith \
+    -ccopt -Wshadow \
+    -ccopt -Wstrict-prototypes \
+    -ccopt -Wwrite-strings \
+    -ccopt -Wswitch \
+    -ccopt -Wmissing-field-initializers \
+    -ccopt -pedantic-errors
+)
+
+cd "$WD/build"
+cp "$WD/src/"* ./
+ocamlopt \
+    -w +1..66 \
+    -cc clang \
+    "${FLAGS[@]}" \
+    -o "$WD/bin/hello" \
+    hello.ml \
+    hello_stubs.c
+
+cd "$WD"
+./bin/hello

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+if [ "$(uname -s)" = "Darwin" ]; then
+    alias ls="ls --color=auto"
+    alias ll="ls -l"
+else
+    alias open="xdg-open"
+fi
+
+export WD=$PWD
+
+ofmt () {
+    ocp-indent "$1" > tmp.ml
+    if diff "$1" tmp.ml > /dev/null 2>&1; then
+        rm tmp.ml
+    else
+        mv tmp.ml "$1"
+    fi
+}
+
+cfmt () {
+    clang-format "$1" > tmp.c
+    if diff "$1" tmp.c > /dev/null 2>&1; then
+        rm tmp.c
+    else
+        mv tmp.c "$1"
+    fi
+}
+
+export -f ofmt
+export -f cfmt

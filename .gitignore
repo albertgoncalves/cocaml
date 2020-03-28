@@ -1,0 +1,11 @@
+*
+!.gitignore
+!*.nix
+!.shellhook
+!.clang-format
+!.ocp-indent
+!src/
+!*.ml
+!*.c
+!*.h
+!main
