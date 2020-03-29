@@ -8,7 +8,7 @@ for x in bin build; do
     fi
 done
 
-export FLAGS=(
+export OPTS=(
     -ccopt "-std=c99" \
     -ccopt "-ferror-limit=1" \
     -ccopt -Wall \
@@ -42,10 +42,10 @@ cp "$WD/src/"* ./
 ocamlopt \
     -w +1..66 \
     -cc clang \
-    "${FLAGS[@]}" \
-    -o "$WD/bin/hello" \
-    hello.ml \
-    hello_stubs.c
+    "${OPTS[@]}" \
+    -o "$WD/bin/main" \
+    main.ml \
+    main_stubs.c
 
 cd "$WD"
-./bin/hello
+./bin/main
