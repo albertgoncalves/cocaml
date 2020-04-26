@@ -2,50 +2,70 @@
 
 set -euo pipefail
 
+export TARGET="$WD/bin/main"
+
 for x in bin build; do
     if [ ! -d "$WD/$x" ]; then
         mkdir "$WD/$x"
     fi
 done
 
-export OPTS=(
-    -ccopt "-std=c99" \
-    -ccopt "-ferror-limit=1" \
+export FLAGS=(
+    -ccopt -fdelete-null-pointer-checks \
+    -ccopt -fshort-enums \
+    -ccopt -O3 \
+    -ccopt "-std=gnu99" \
     -ccopt -Wall \
-    -ccopt -Wextra \
-    -ccopt -Wconversion \
-    -ccopt -Wsign-conversion \
-    -ccopt -Wunused \
-    -ccopt -Wunused-function \
-    -ccopt -Wunused-label \
-    -ccopt -Wunused-macros \
-    -ccopt -Wunused-parameter \
-    -ccopt -Wunused-value \
-    -ccopt -Wunused-variable \
+    -ccopt -Wbad-function-cast \
     -ccopt -Wcast-align \
+    -ccopt "-Wcast-align=strict" \
     -ccopt -Wcast-qual \
+    -ccopt -Wconversion \
+    -ccopt -Wdate-time \
+    -ccopt -Wdouble-promotion \
+    -ccopt -Wduplicated-branches \
+    -ccopt -Wduplicated-cond \
+    -ccopt -Werror \
+    -ccopt -Wextra \
+    -ccopt -Wfatal-errors \
+    -ccopt -Wfloat-equal \
+    -ccopt "-Wformat=2" \
+    -ccopt -Wformat-signedness \
+    -ccopt -Winline \
+    -ccopt -Wlogical-op \
     -ccopt -Wmissing-declarations \
-    -ccopt -Wredundant-decls \
+    -ccopt -Wmissing-include-dirs \
     -ccopt -Wmissing-prototypes \
     -ccopt -Wnested-externs \
+    -ccopt -Wnull-dereference \
+    -ccopt -Wpacked \
+    -ccopt -Wpedantic \
     -ccopt -Wpointer-arith \
+    -ccopt -Wredundant-decls \
     -ccopt -Wshadow \
+    -ccopt -Wstack-protector \
     -ccopt -Wstrict-prototypes \
-    -ccopt -Wwrite-strings \
-    -ccopt -Wswitch \
-    -ccopt -Wmissing-field-initializers \
-    -ccopt -pedantic-errors
+    -ccopt -Wswitch-enum \
+    -ccopt -Wtrampolines \
+    -ccopt -Wundef \
+    -ccopt -Wunused \
+    -ccopt -Wunused-macros \
+    -ccopt -Wwrite-strings
 )
 
-cd "$WD/build"
-cp "$WD/src/"* ./
-ocamlopt \
-    -w +1..66 \
-    -cc clang \
-    "${OPTS[@]}" \
-    -o "$WD/bin/main" \
-    main.ml \
-    main_stubs.c
+clang-format -i -verbose "$WD/src"/*.h 2>&1 | sed 's/\/.*\///g'
+clang-format -i -verbose "$WD/src"/*.c 2>&1 | sed 's/\/.*\///g'
 
-cd "$WD"
-./bin/main
+(
+    cd "$WD/build"
+    cp "$WD/src/"* ./
+    ocamlopt \
+        -w +1..66 \
+        -cc gcc \
+        "${FLAGS[@]}" \
+        main.ml \
+        main_stubs.c \
+        -o "$TARGET"
+)
+
+"$TARGET"

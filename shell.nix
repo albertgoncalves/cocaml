@@ -1,11 +1,11 @@
 with import <nixpkgs> {};
-llvmPackages_9.stdenv.mkDerivation {
-    name = "_";
+mkShell {
     buildInputs = [
         (with ocaml-ng.ocamlPackages_4_10; [
             ocaml
             ocp-indent
         ])
+        clang_10
         shellcheck
     ];
     shellHook = ''

@@ -11,9 +11,9 @@ typedef struct {
 
 CAMLprim value new_t(value ml_float, value ml_int, value ml_string) {
     obj_t* o;
-    o           = malloc(sizeof(obj_t));
-    o->c_float  = Double_val(ml_float);
-    o->c_int    = Int_val(ml_int);
+    o = malloc(sizeof(obj_t));
+    o->c_float = Double_val(ml_float);
+    o->c_int = Int_val(ml_int);
     o->c_string = String_val(ml_string);
     return (value)o;
 }
@@ -21,7 +21,9 @@ CAMLprim value new_t(value ml_float, value ml_int, value ml_string) {
 CAMLprim value print_t(value ml_ptr) {
     obj_t* o;
     o = (obj_t*)ml_ptr;
-    printf("c_float : %g\nc_int   : %d\nc_string: %s\n", o->c_float, o->c_int,
+    printf("c_float : %g\nc_int   : %d\nc_string: %s\n",
+           o->c_float,
+           o->c_int,
            o->c_string);
     return Val_unit;
 }

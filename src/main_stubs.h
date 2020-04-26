@@ -1,3 +1,8 @@
-CAMLprim value new_t(value ml_float, value ml_int, value ml_string);
-CAMLprim value print_t(value ml_ptr);
-CAMLprim value free_t(value ml_ptr);
+#ifndef __MAIN_STUBS_H__
+#define __MAIN_STUBS_H__
+
+CAMLprim value new_t(value, value, value);
+CAMLprim value print_t(value);
+CAMLprim value free_t(value);
+
+#endif
