@@ -2,14 +2,13 @@
 
 set -euo pipefail
 
-export TARGET="$WD/bin/main"
-
 for x in bin build; do
     if [ ! -d "$WD/$x" ]; then
         mkdir "$WD/$x"
     fi
 done
 
+export TARGET="$WD/bin/main"
 export FLAGS=(
     -ccopt -fdelete-null-pointer-checks \
     -ccopt -fshort-enums \
