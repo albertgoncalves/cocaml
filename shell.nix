@@ -7,6 +7,7 @@ mkShell {
         ])
         clang_10
         shellcheck
+        valgrind
     ];
     shellHook = ''
         . .shellhook

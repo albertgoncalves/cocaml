@@ -1,36 +1,33 @@
-#include <caml/mlvalues.h>
 #include <stdio.h>
 
 #include "main_stubs.h"
 
 typedef struct {
-    double      c_float;
-    int         c_int;
-    const char* c_string;
+    double      double_;
+    int         int_;
+    const char* string;
 } obj_t;
 
 CAMLprim value new_t(value ml_float, value ml_int, value ml_string) {
-    obj_t* o;
-    o = malloc(sizeof(obj_t));
-    o->c_float = Double_val(ml_float);
-    o->c_int = Int_val(ml_int);
-    o->c_string = String_val(ml_string);
+    obj_t* o = malloc(sizeof(obj_t));
+    o->double_ = Double_val(ml_float);
+    o->int_ = Int_val(ml_int);
+    o->string = String_val(ml_string);
     return (value)o;
 }
 
 CAMLprim value print_t(value ml_ptr) {
-    obj_t* o;
-    o = (obj_t*)ml_ptr;
-    printf("c_float : %g\nc_int   : %d\nc_string: %s\n",
-           o->c_float,
-           o->c_int,
-           o->c_string);
+    obj_t* o = (obj_t*)ml_ptr;
+    printf("double : %g\n"
+           "int    : %d\n"
+           "char*  : %s\n",
+           o->double_,
+           o->int_,
+           o->string);
     return Val_unit;
 }
 
 CAMLprim value free_t(value ml_ptr) {
-    obj_t* o;
-    o = (obj_t*)ml_ptr;
-    free(o);
+    free((obj_t*)ml_ptr);
     return Val_unit;
 }
