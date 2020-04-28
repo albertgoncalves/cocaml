@@ -9,46 +9,50 @@ for x in bin build; do
 done
 
 export TARGET="$WD/bin/main"
-export FLAGS=(
-    -ccopt -fdelete-null-pointer-checks \
-    -ccopt -fshort-enums \
-    -ccopt -O3 \
-    -ccopt "-std=gnu99" \
-    -ccopt -Wall \
-    -ccopt -Wbad-function-cast \
-    -ccopt -Wcast-align \
-    -ccopt "-Wcast-align=strict" \
-    -ccopt -Wcast-qual \
-    -ccopt -Wconversion \
-    -ccopt -Wdate-time \
-    -ccopt -Wdouble-promotion \
-    -ccopt -Wduplicated-branches \
-    -ccopt -Wduplicated-cond \
-    -ccopt -Werror \
-    -ccopt -Wextra \
-    -ccopt -Wfatal-errors \
-    -ccopt -Wfloat-equal \
-    -ccopt "-Wformat=2" \
-    -ccopt -Wformat-signedness \
-    -ccopt -Winline \
-    -ccopt -Wlogical-op \
-    -ccopt -Wmissing-declarations \
-    -ccopt -Wmissing-include-dirs \
-    -ccopt -Wmissing-prototypes \
-    -ccopt -Wnested-externs \
-    -ccopt -Wnull-dereference \
-    -ccopt -Wpacked \
-    -ccopt -Wpedantic \
-    -ccopt -Wpointer-arith \
-    -ccopt -Wredundant-decls \
-    -ccopt -Wshadow \
-    -ccopt -Wstack-protector \
-    -ccopt -Wstrict-prototypes \
-    -ccopt -Wswitch-enum \
-    -ccopt -Wtrampolines \
-    -ccopt -Wundef \
-    -ccopt -Wunused \
-    -ccopt -Wunused-macros \
+export OFLAGS=(
+    -cc gcc
+    -w +1..66
+)
+export CFLAGS=(
+    -ccopt -fdelete-null-pointer-checks
+    -ccopt -fshort-enums
+    -ccopt -O3
+    -ccopt "-std=gnu99"
+    -ccopt -Wall
+    -ccopt -Wbad-function-cast
+    -ccopt -Wcast-align
+    -ccopt "-Wcast-align=strict"
+    -ccopt -Wcast-qual
+    -ccopt -Wconversion
+    -ccopt -Wdate-time
+    -ccopt -Wdouble-promotion
+    -ccopt -Wduplicated-branches
+    -ccopt -Wduplicated-cond
+    -ccopt -Werror
+    -ccopt -Wextra
+    -ccopt -Wfatal-errors
+    -ccopt -Wfloat-equal
+    -ccopt "-Wformat=2"
+    -ccopt -Wformat-signedness
+    -ccopt -Winline
+    -ccopt -Wlogical-op
+    -ccopt -Wmissing-declarations
+    -ccopt -Wmissing-include-dirs
+    -ccopt -Wmissing-prototypes
+    -ccopt -Wnested-externs
+    -ccopt -Wnull-dereference
+    -ccopt -Wpacked
+    -ccopt -Wpedantic
+    -ccopt -Wpointer-arith
+    -ccopt -Wredundant-decls
+    -ccopt -Wshadow
+    -ccopt -Wstack-protector
+    -ccopt -Wstrict-prototypes
+    -ccopt -Wswitch-enum
+    -ccopt -Wtrampolines
+    -ccopt -Wundef
+    -ccopt -Wunused
+    -ccopt -Wunused-macros
     -ccopt -Wwrite-strings
 )
 
@@ -59,9 +63,8 @@ clang-format -i -verbose "$WD/src"/*.c 2>&1 | sed 's/\/.*\///g'
     cd "$WD/build"
     cp "$WD/src/"* ./
     ocamlopt \
-        -w +1..66 \
-        -cc gcc \
-        "${FLAGS[@]}" \
+        "${OFLAGS[@]}" \
+        "${CFLAGS[@]}" \
         main.ml \
         main_stubs.c \
         -o "$TARGET"
