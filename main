@@ -8,52 +8,87 @@ for x in bin build; do
     fi
 done
 
-export TARGET="$WD/bin/main"
-export OFLAGS=(
+export TARGET_SANITIZE="$WD/bin/main_sanitize"
+export TARGET_VALGRIND="$WD/bin/main_valgrind"
+export OCAML_FLAGS=(
     -cc gcc
     -w +1..66
 )
-export CFLAGS=(
-    -ccopt -fdelete-null-pointer-checks
-    -ccopt -fshort-enums
-    -ccopt -O3
+export C_FLAGS=(
+    -ccopt "-fdelete-null-pointer-checks"
+    -ccopt "-fshort-enums"
+    -ccopt "-O3"
     -ccopt "-std=gnu99"
-    -ccopt -Wall
-    -ccopt -Wbad-function-cast
-    -ccopt -Wcast-align
+    -ccopt "-Wall"
+    -ccopt "-Wbad-function-cast"
+    -ccopt "-Wcast-align"
     -ccopt "-Wcast-align=strict"
-    -ccopt -Wcast-qual
-    -ccopt -Wconversion
-    -ccopt -Wdate-time
-    -ccopt -Wdouble-promotion
-    -ccopt -Wduplicated-branches
-    -ccopt -Wduplicated-cond
-    -ccopt -Werror
-    -ccopt -Wextra
-    -ccopt -Wfatal-errors
-    -ccopt -Wfloat-equal
+    -ccopt "-Wcast-qual"
+    -ccopt "-Wconversion"
+    -ccopt "-Wdate-time"
+    -ccopt "-Wdouble-promotion"
+    -ccopt "-Wduplicated-branches"
+    -ccopt "-Wduplicated-cond"
+    -ccopt "-Werror"
+    -ccopt "-Wextra"
+    -ccopt "-Wfatal-errors"
+    -ccopt "-Wfloat-equal"
     -ccopt "-Wformat=2"
-    -ccopt -Wformat-signedness
-    -ccopt -Winline
-    -ccopt -Wlogical-op
-    -ccopt -Wmissing-declarations
-    -ccopt -Wmissing-include-dirs
-    -ccopt -Wmissing-prototypes
-    -ccopt -Wnested-externs
-    -ccopt -Wnull-dereference
-    -ccopt -Wpacked
-    -ccopt -Wpedantic
-    -ccopt -Wpointer-arith
-    -ccopt -Wredundant-decls
-    -ccopt -Wshadow
-    -ccopt -Wstack-protector
-    -ccopt -Wstrict-prototypes
-    -ccopt -Wswitch-enum
-    -ccopt -Wtrampolines
-    -ccopt -Wundef
-    -ccopt -Wunused
-    -ccopt -Wunused-macros
-    -ccopt -Wwrite-strings
+    -ccopt "-Wformat-signedness"
+    -ccopt "-Winline"
+    -ccopt "-Wlogical-op"
+    -ccopt "-Wmissing-declarations"
+    -ccopt "-Wmissing-include-dirs"
+    -ccopt "-Wmissing-prototypes"
+    -ccopt "-Wnested-externs"
+    -ccopt "-Wnull-dereference"
+    -ccopt "-Wpacked"
+    -ccopt "-Wpedantic"
+    -ccopt "-Wpointer-arith"
+    -ccopt "-Wredundant-decls"
+    -ccopt "-Wshadow"
+    -ccopt "-Wstack-protector"
+    -ccopt "-Wstrict-prototypes"
+    -ccopt "-Wswitch-enum"
+    -ccopt "-Wtrampolines"
+    -ccopt "-Wundef"
+    -ccopt "-Wunused"
+    -ccopt "-Wunused-macros"
+    -ccopt "-Wwrite-strings"
+)
+export C_FLAGS_SANITIZE=(
+    -ccopt "-fsanitize=address"
+    -ccopt "-fsanitize-address-use-after-scope"
+    -ccopt "-fsanitize=alignment"
+    -ccopt "-fsanitize=bool"
+    -ccopt "-fsanitize=bounds"
+    -ccopt "-fsanitize=bounds-strict"
+    -ccopt "-fsanitize=builtin"
+    -ccopt "-fsanitize=enum"
+    -ccopt "-fsanitize=float-cast-overflow"
+    -ccopt "-fsanitize=float-divide-by-zero"
+    -ccopt "-fsanitize=integer-divide-by-zero"
+    -ccopt "-fsanitize=leak"
+    -ccopt "-fsanitize=nonnull-attribute"
+    -ccopt "-fsanitize=null"
+    -ccopt "-fsanitize=object-size"
+    -ccopt "-fsanitize=pointer-compare"
+    -ccopt "-fsanitize=pointer-overflow"
+    -ccopt "-fsanitize=pointer-subtract"
+    -ccopt "-fsanitize=return"
+    -ccopt "-fsanitize=returns-nonnull-attribute"
+    -ccopt "-fsanitize=shift"
+    -ccopt "-fsanitize=shift-base"
+    -ccopt "-fsanitize=shift-exponent"
+    -ccopt "-fsanitize=signed-integer-overflow"
+    -ccopt "-fsanitize=undefined"
+    -ccopt "-fsanitize-undefined-trap-on-error"
+    -ccopt "-fsanitize=unreachable"
+    -ccopt "-fsanitize=vla-bound"
+)
+export FILES=(
+    main.ml
+    main_stubs.c
 )
 
 clang-format -i -verbose "$WD/src"/*.h 2>&1 | sed 's/\/.*\///g'
@@ -63,11 +98,16 @@ clang-format -i -verbose "$WD/src"/*.c 2>&1 | sed 's/\/.*\///g'
     cd "$WD/build"
     cp "$WD/src/"* ./
     ocamlopt \
-        "${OFLAGS[@]}" \
-        "${CFLAGS[@]}" \
-        main.ml \
-        main_stubs.c \
-        -o "$TARGET"
+        -o "$TARGET_VALGRIND" \
+        "${OCAML_FLAGS[@]}" \
+        "${C_FLAGS[@]}" \
+        "${FILES[@]}"
+    ocamlopt \
+        -o "$TARGET_SANITIZE" \
+        "${OCAML_FLAGS[@]}" \
+        "${C_FLAGS[@]}" \
+        "${C_FLAGS_SANITIZE[@]}" \
+        "${FILES[@]}"
 )
 
-"$TARGET"
+"$TARGET_SANITIZE"
