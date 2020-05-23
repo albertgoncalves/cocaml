@@ -10,6 +10,9 @@ typedef struct {
 
 CAMLprim value new_t(value ml_float, value ml_int, value ml_string) {
     obj_t* o = malloc(sizeof(obj_t));
+    if (o == NULL) {
+        exit(EXIT_FAILURE);
+    }
     o->double_ = Double_val(ml_float);
     o->int_ = Int_val(ml_int);
     o->string = String_val(ml_string);
