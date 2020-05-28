@@ -6,6 +6,7 @@ mkShell {
             ocp-indent
         ])
         clang_10
+        cppcheck
         glibcLocales
         shellcheck
         valgrind

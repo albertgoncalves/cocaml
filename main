@@ -90,6 +90,7 @@ export FILES=(
 
 clang-format -i -verbose "$WD/src"/*.h 2>&1 | sed 's/\/.*\///g'
 clang-format -i -verbose "$WD/src"/*.c 2>&1 | sed 's/\/.*\///g'
+cppcheck --enable=all --suppress=missingIncludeSystem "$WD/src"
 
 (
     cd "$WD/build"

@@ -27,6 +27,8 @@ cfmt () {
     fi
 }
 
+alias cppcheck="cppcheck --enable=all --suppress=missingIncludeSystem"
+
 export OCAMLRUNPARAM="a=2,c,o=100"
 export -f ofmt
 export -f cfmt
